@@ -1,7 +1,7 @@
 let productsHtml = "";
-onload=function(){
-    showProductComponent()
-}
+onload = function () {
+  showProductComponent();
+};
 function showProductComponent() {
   products.forEach((product) => {
     productsHtml += `  <div class="product-container">
@@ -22,7 +22,7 @@ function showProductComponent() {
           </div>
 
           <div class="product-price">
-           ${(product.priceCents /100).toFixed(2)}
+           ${(product.priceCents / 100).toFixed(2)}
           </div>
 
           <div class="product-quantity-container">
@@ -47,11 +47,36 @@ function showProductComponent() {
             Added
           </div>
 
-          <button class="add-to-cart-button button-primary">
+          <button class="add-to-cart-button button-primary " 
+          data-product-id="${product.id}">
             Add to Cart
           </button>
         </div>`;
   });
   document.querySelector(".products-grid-js").innerHTML = productsHtml;
-  console.log(productsHtml);
+  document.querySelectorAll(".add-to-cart-button").forEach((button, i) => {
+    button.addEventListener("click", function () {
+      const productId = button.dataset.productId;
+      let matchingItem;
+      cart.forEach((item) => {
+        if (productId === item.productId) {
+          matchingItem = item;
+        }
+      });
+      if (matchingItem) {
+        matchingItem.quantity += 1;
+      } else {
+        cart.push({
+          productId,
+          quantity: 1,
+        });
+      }
+      // loop throw cart to calculate quantity
+      let cartQuantity = 0;
+      cart.forEach((item) => {
+        cartQuantity += item.quantity;
+    });
+    document.querySelector('.cart-quantity').innerHTML= cartQuantity
+    });
+  });
 }
